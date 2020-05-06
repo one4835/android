@@ -40,12 +40,15 @@
             android:layout_marginRight="20dp">
 
             <EditText
+                android:inputType="textPassword"
+                android:id="@+id/password_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
+            android:id="@+id/email_edittext"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
@@ -67,13 +70,14 @@
             android:textColor="@color/colorWhite" />
 
         <Button
+            android:id="@+id/google_sign_in_button"
+            android:text="@string/signin_google"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="80dp"
             android:background="@drawable/btn_signin_google"
-            android:text="@string/signin_google"
             android:textColor="@color/colorWhite" />
     </LinearLayout>
 </RelativeLayout>
