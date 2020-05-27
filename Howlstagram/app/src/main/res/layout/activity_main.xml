@@ -8,14 +8,6 @@
     tools:context=".MainActivity">
 
     <android.support.v7.widget.Toolbar>
-        <LinearLayout
-            android:id="@+id/toolbar_division"
-            android:background="@color/colorDivision"
-            android:orientation="horizontal"
-            android:layout_below="@+id/my_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="1dp">
-        </LinearLayout>
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="35dp">
