@@ -1,5 +1,6 @@
 package com.howl.howlstagram.f16.navigation
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +11,14 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.howlstagram.navigation.CommentActivity
+import com.example.howlstagram.navigation.model.AlarmDTO
 import com.example.howlstagram.navigation.model.ContectDTO
+import com.example.howlstagram.navigation.model.ContentDTO
+import com.google.api.Billing
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.howl.howlstagram_f16.navigation.UserFragment
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.android.synthetic.main.item_detail.view.*
 
@@ -35,6 +41,8 @@ class DetailViewFragment : Fragment(){
             firestore?.collection("images")?.orderBy("timestamp")?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 contentDTOs.clear()
                 contentUidList.clear()
+                if(querySnapshot == null)return@addSnapshotListener
+
                 for (snapshot in querySnapshot!!.documents){
                     var item = snapshot.toObject(ContectDTO::class.java)
                 }
@@ -74,13 +82,29 @@ class DetailViewFragment : Fragment(){
             else{
                 viewholder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite_border)
             }
+
+            viewholder.detailviewitem_profile_image.setOnClickListener {
+                var fragment = UserFragment()
+                var bundle = Bundle()
+                bundle.putString("destinationUid",contentDTOs[p1].uid)
+                bundle.putString("userId",contentDTOs[p1].userId)
+                fragment.arguments = bundle
+                activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_content,fragment)?.commit()
+
+            }
+            viewholder.detailviewitem_comment_imageview.setOnClickListener { v ->
+                var intent = Intent(v.context,CommentActivity::class.java)
+                intent.putExtra("contentUid",contentUidList[p1])
+                intent.putExtra("destinationUid",contentDTOs[p1].uid)
+                startActivity(intent)
+            }
         }
         fun favoriteEvent(position : Int){
             var tsDoc = firestore?.collection("images")?.document(contentUidList[position])
             firestore?.runTransaction { transaction ->
 
 
-                var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
+                var contentDTO = transaction.get(tsDoc!!).toObject(ContectDTO::class.java)
 
                 if(contentDTO!!.favorites.containsKey(uid)){
                     contentDTO?.favoriteCount = contentDTO?.favoriteCount - 1
@@ -89,10 +113,20 @@ class DetailViewFragment : Fragment(){
                 }else{
                     contentDTO?.favoriteCount = contentDTO?.favoriteCount + 1
                     contentDTO?.favorites.[uid!!] = true
+                    favoriteAlarm(contentDTOs[position].uid!!)
             }
-            transition.set(tsDoc,contentDTO)
+            transaction.set(tsDoc,contentDTOs)
 
 
+        }
+        fun favoriteAlarm(destinationUid : String){
+            var alarmDTO = AlarmDTO
+            alarmDTO.destinationUid = destinationUid
+            alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
+            alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+            alarmDTO.kind = 0
+            alarmDTO.timestamp = System.currentTimeMillis()
+            FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
         }
     }
 }

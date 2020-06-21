@@ -3,7 +3,7 @@
     package="com.example.howlstagram">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".navigation.AddPhotoActivity"></activity>
+        <activity android:name=".navigation.CommentActivity"></activity>
+        <activity android:name=".navigation.AddPhotoActivity" />
         <activity android:name=".LoginActivity" />
 
         <intent-filter>
@@ -21,7 +22,7 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
 
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -43,6 +44,12 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.goolgle.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/push_icon"/>
+        <meta-data
+            android:name="com.goolgle.firebase.messaging.default_notification_icon"
+            android:resource="@color/colorAccent"/>
     </application>
 
 </manifest>

@@ -1,6 +1,6 @@
 package com.example.howlstagram.navigation.model
 
-data class ContentDTO(var explain : String? = null,
+data class ContectDTO(var explain : String? = null,
                       var imageUri : String? = null,
                       var uid : String? = null,
                       var userId : String? = null,
